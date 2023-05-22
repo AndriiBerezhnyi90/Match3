@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6683883558697124986}
   - component: {fileID: 5433438301543046049}
+  - component: {fileID: 5498415775618928639}
   m_Layer: 0
   m_Name: Grape
   m_TagString: Untagged
@@ -82,3 +83,15 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5498415775618928639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2710958202936140976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f648289fb7814c4b8c40bd1343c4262, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
