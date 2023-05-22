@@ -334,7 +334,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _boardGenerator: {fileID: 1151707483}
-  _moveSpeed: 3
 --- !u!1 &1151707481
 GameObject:
   m_ObjectHideFlags: 0
@@ -389,3 +388,4 @@ MonoBehaviour:
   - {fileID: -9097421597781052938, guid: 557c827e4ff97a34ba6b5b6acd7972b2, type: 3}
   - {fileID: 3518467683989017020, guid: fa612261d8e31c94ebb17a9184f84892, type: 3}
   _cellTemplate: {fileID: -7350453643967372798, guid: fd4c46c222a23d0479343de16dffd8c3, type: 3}
+  _moveSpeed: 3

@@ -7,6 +7,7 @@ public sealed class BoardGenerator : MonoBehaviour
     [SerializeField] private int _height;
     [SerializeField] private List<BaseFruit> _fruitTemplates;
     [SerializeField] private Cell _cellTemplate;
+    [SerializeField] private float _moveSpeed;
 
     public void Create(out Dictionary<Vector2, Cell> grid, out int width, out int height)
     {
@@ -22,7 +23,9 @@ public sealed class BoardGenerator : MonoBehaviour
 
                 var tempCell = Instantiate(_cellTemplate, tempPosition, Quaternion.identity, transform.parent);
                 tempCell.name = $"( {x} , {y} )";
-                tempCell.Initialize(NewFruit(tempPosition));
+                tempCell.Initialize(NewFruit(tempPosition), _moveSpeed);
+
+                grid.Add(tempPosition, tempCell);
             }
         }
     }

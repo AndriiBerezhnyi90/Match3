@@ -4,7 +4,6 @@ using System.Collections.Generic;
 public sealed class Board : MonoBehaviour
 {
     [SerializeField] private BoardGenerator _boardGenerator;
-    [SerializeField] private float _moveSpeed;
 
     private int _width;
     private int _height;
@@ -17,5 +16,38 @@ public sealed class Board : MonoBehaviour
     private void Awake()
     {
         _boardGenerator.Create(out _grid, out _width, out _height);
+    }
+
+    private void OnEnable()
+    {
+        foreach (var item in _grid)
+        {
+            item.Value.Swipe += OnSwipe;
+        }
+    }
+
+    private void OnDisable()
+    {
+        foreach (var item in _grid)
+        {
+            item.Value.Swipe -= OnSwipe;
+        }
+    }
+
+    private void OnSwipe(Vector2 startPosition, Vector2 targetPosition)
+    {
+        if (_grid.ContainsKey(targetPosition))
+        {
+            SwitchFruits(startPosition, targetPosition);
+        }
+    }
+
+    private void SwitchFruits(Vector2 startPosition, Vector2 targetPosition)
+    {
+        BaseFruit startFruit = _grid[startPosition].GetFruit();
+        BaseFruit targetFruit = _grid[targetPosition].GetFruit();
+
+        _grid[startPosition].SetNewFruit(targetFruit);
+        _grid[targetPosition].SetNewFruit(startFruit);
     }
 }
