@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public sealed class Board : MonoBehaviour
 {
     [SerializeField] private BoardGenerator _boardGenerator;
+    [SerializeField] private MatchHandler _matchHandler;
 
     private int _width;
     private int _height;
@@ -16,6 +17,7 @@ public sealed class Board : MonoBehaviour
     private void Awake()
     {
         _boardGenerator.Create(out _grid, out _width, out _height);
+        _matchHandler.Initialize(_grid);
     }
 
     private void OnEnable()
@@ -24,6 +26,8 @@ public sealed class Board : MonoBehaviour
         {
             item.Value.Swipe += OnSwipe;
         }
+
+        _matchHandler.Match += OnMatch;
     }
 
     private void OnDisable()
@@ -32,6 +36,8 @@ public sealed class Board : MonoBehaviour
         {
             item.Value.Swipe -= OnSwipe;
         }
+
+        _matchHandler.Match -= OnMatch;
     }
 
     private void OnSwipe(Vector2 startPosition, Vector2 targetPosition)
@@ -49,5 +55,13 @@ public sealed class Board : MonoBehaviour
 
         _grid[startPosition].SetNewFruit(targetFruit);
         _grid[targetPosition].SetNewFruit(startFruit);
+    }
+
+    private void OnMatch(List<Vector2> match)
+    {
+        foreach (var position in match)
+        {
+            _grid[position].Destroy();
+        }
     }
 }
