@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using System.Collections;
+using System;
 
 [RequireComponent(typeof(BoxCollider2D))]
 public sealed class Cell : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
@@ -14,6 +15,9 @@ public sealed class Cell : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private float _moveSpeed;
 
     public UnityAction<Vector2, Vector2> Swipe;
+    public UnityAction FruitHome;
+    public bool IsFruitHome;
+    public Type Fruit => _fruit.GetType();
 
     private float Angle
     {
@@ -52,6 +56,12 @@ public sealed class Cell : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         _fruit = fruit;
         _fruit.transform.SetParent(this.transform);
         _moveSpeed = moveSpeed;
+        IsFruitHome = true;
+    }
+
+    public void Destroy()
+    {
+        _fruit.GetComponent<SpriteRenderer>().color = Color.black;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -82,6 +92,7 @@ public sealed class Cell : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public void SetNewFruit(BaseFruit fruit)
     {
         _fruit = fruit;
+        IsFruitHome = false;
         StartCoroutine(Moving());
     }
 
@@ -95,5 +106,7 @@ public sealed class Cell : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
 
         _fruit.transform.SetParent(transform);
+        IsFruitHome = true;
+        FruitHome?.Invoke();
     }
 }
