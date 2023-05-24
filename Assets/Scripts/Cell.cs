@@ -17,7 +17,20 @@ public sealed class Cell : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public UnityAction<Vector2, Vector2> Swipe;
     public UnityAction FruitHome;
     public bool IsFruitHome;
-    public Type Fruit => _fruit.GetType();
+    public Type Fruit
+    {
+        get
+        {
+            if (_fruit)
+            {
+                return _fruit.GetType();
+            }
+            else
+            {
+                return null;
+            }
+        }
+    }
 
     private float Angle
     {
@@ -61,7 +74,7 @@ public sealed class Cell : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void Destroy()
     {
-        _fruit.GetComponent<SpriteRenderer>().color = Color.black;
+        Destroy(_fruit.gameObject);
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -85,6 +98,7 @@ public sealed class Cell : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         var tempFruit = _fruit;
         _fruit.transform.SetParent(null);
         _fruit = null;
+        IsFruitHome = false;
 
         return tempFruit;
     }
