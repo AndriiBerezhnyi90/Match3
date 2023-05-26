@@ -51,14 +51,11 @@ public sealed class Board : MonoBehaviour
 
     private void SwitchFruits(Vector2 startPosition, Vector2 targetPosition)
     {
-        if (_grid[startPosition].Fruit != null && _grid[targetPosition].Fruit != null)
-        {
-            BaseFruit startFruit = _grid[startPosition].GetFruit();
-            BaseFruit targetFruit = _grid[targetPosition].GetFruit();
+        BaseFruit startFruit = _grid[startPosition].GetFruit();
+        BaseFruit targetFruit = _grid[targetPosition].GetFruit();
 
-            _grid[startPosition].SetNewFruit(targetFruit);
-            _grid[targetPosition].SetNewFruit(startFruit);
-        }
+        _grid[startPosition].SetNewFruit(targetFruit);
+        _grid[targetPosition].SetNewFruit(startFruit);
     }
 
     private void OnHasMatch(List<List<Vector2>> matchList)

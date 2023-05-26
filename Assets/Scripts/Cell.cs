@@ -95,11 +95,18 @@ public sealed class Cell : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public BaseFruit GetFruit()
     {
-        var tempFruit = _fruit;
-        _fruit.transform.SetParent(null);
-        _fruit = null;
+        if (_fruit)
+        {
+            var tempFruit = _fruit;
+            _fruit.transform.SetParent(null);
+            _fruit = null;
 
-        return tempFruit;
+            return tempFruit;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public void SetNewFruit(BaseFruit fruit)
