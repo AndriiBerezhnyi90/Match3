@@ -34,6 +34,11 @@ public sealed class MatchHandler : MonoBehaviour
         }
     }
 
+    public bool IsAvailable(Vector2 position)
+    {
+        return _grid.ContainsKey(position) && _grid[position].Fruit != null && IsInMatch(position) == false;
+    }
+
     private void OnFruitHome()
     {
         bool allFruitsHome = true;
@@ -99,7 +104,7 @@ public sealed class MatchHandler : MonoBehaviour
                 break;
         }
 
-        if (IsTargetExsist(targetPosition))
+        if (IsAvailable(targetPosition))
         {
             if(_grid[targetPosition].Fruit == _grid[position].Fruit)
             {
@@ -107,11 +112,6 @@ public sealed class MatchHandler : MonoBehaviour
                 FindAt(targetPosition, direction);
             }
         }
-    }
-
-    private bool IsTargetExsist(Vector2 position)
-    {
-        return _grid.ContainsKey(position) && _grid[position].Fruit != null && IsInMatch(position) == false;
     }
 
     private void CheckMatch(List<Vector2> match)

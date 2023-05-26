@@ -98,16 +98,18 @@ public sealed class Cell : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         var tempFruit = _fruit;
         _fruit.transform.SetParent(null);
         _fruit = null;
-        IsFruitHome = false;
 
         return tempFruit;
     }
 
     public void SetNewFruit(BaseFruit fruit)
     {
-        _fruit = fruit;
-        IsFruitHome = false;
-        StartCoroutine(Moving());
+        if (fruit == true)
+        {
+            _fruit = fruit;
+            IsFruitHome = false;
+            StartCoroutine(Moving());
+        }
     }
 
     private IEnumerator Moving()

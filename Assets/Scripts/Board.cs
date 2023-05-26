@@ -71,6 +71,28 @@ public sealed class Board : MonoBehaviour
             }
         }
 
+        StartCoroutine(Collapse());
         matchList.Clear();
+    }
+
+    private IEnumerator Collapse()
+    {
+        yield return null;
+
+        foreach (var item in _grid)
+        {
+            Vector2 targetPosition = item.Key + Vector2.down;
+
+            if(CanCollapse(item.Key, targetPosition))
+            {
+                BaseFruit tempFruit = _grid[item.Key].GetFruit();
+                _grid[targetPosition].SetNewFruit(tempFruit);
+            }
+        }
+    }
+
+    private bool CanCollapse(Vector2 position, Vector2 targetPosition)
+    {
+        return _grid.ContainsKey(targetPosition) && _grid[targetPosition].Fruit == null && _grid[position].Fruit != null;
     }
 }
