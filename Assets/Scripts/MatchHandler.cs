@@ -1,18 +1,21 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Events;
+using System.Collections;
 
 public sealed class MatchHandler : MonoBehaviour
 {
     private Dictionary<Vector2, Cell> _grid;
     private List<Vector2> _match;
+    private List<List<Vector2>> _matchList;
 
-    public UnityAction<List<Vector2>> Match;
+    public UnityAction<List<List<Vector2>>> HasMatch;
 
     public void Initialize( Dictionary<Vector2, Cell> grid)
     {
         _grid = grid;
         _match = new List<Vector2>();
+        _matchList = new List<List<Vector2>>();
     }
 
     private void Start()
@@ -29,6 +32,11 @@ public sealed class MatchHandler : MonoBehaviour
         {
             item.Value.FruitHome -= OnFruitHome;
         }
+    }
+
+    public bool IsAvailable(Vector2 position)
+    {
+        return _grid.ContainsKey(position) && _grid[position].Fruit != null && IsInMatch(position) == false;
     }
 
     private void OnFruitHome()
@@ -56,6 +64,8 @@ public sealed class MatchHandler : MonoBehaviour
             Horizontal(item.Key);
             Vertical(item.Key);
         }
+
+        HasMatch?.Invoke(_matchList);
     }
 
     private void Horizontal(Vector2 position)
@@ -94,7 +104,7 @@ public sealed class MatchHandler : MonoBehaviour
                 break;
         }
 
-        if (_grid.ContainsKey(targetPosition))
+        if (IsAvailable(targetPosition))
         {
             if(_grid[targetPosition].Fruit == _grid[position].Fruit)
             {
@@ -108,7 +118,14 @@ public sealed class MatchHandler : MonoBehaviour
     {
         if (_match.Count >= 3)
         {
-            Match?.Invoke(_match);
+            var tempList = new List<Vector2>(match.Count);
+
+            foreach (var position in match)
+            {
+                tempList.Add(position);
+            }
+
+            _matchList.Add(tempList);
         }
 
         _match.Clear();
@@ -120,5 +137,20 @@ public sealed class MatchHandler : MonoBehaviour
         Down,
         Left,
         Right
+    }
+
+    private bool IsInMatch(Vector2 position)
+    {
+        bool result = false;
+
+        foreach (var list in _matchList)
+        {
+            if (list.Contains(position))
+            {
+                result = true;
+            }
+        }
+
+        return result;
     }
 }

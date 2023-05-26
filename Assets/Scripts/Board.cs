@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public sealed class Board : MonoBehaviour
 {
@@ -27,7 +28,7 @@ public sealed class Board : MonoBehaviour
             item.Value.Swipe += OnSwipe;
         }
 
-        _matchHandler.Match += OnMatch;
+        _matchHandler.HasMatch += OnHasMatch;
     }
 
     private void OnDisable()
@@ -37,7 +38,7 @@ public sealed class Board : MonoBehaviour
             item.Value.Swipe -= OnSwipe;
         }
 
-        _matchHandler.Match -= OnMatch;
+        _matchHandler.HasMatch -= OnHasMatch;
     }
 
     private void OnSwipe(Vector2 startPosition, Vector2 targetPosition)
@@ -50,18 +51,48 @@ public sealed class Board : MonoBehaviour
 
     private void SwitchFruits(Vector2 startPosition, Vector2 targetPosition)
     {
-        BaseFruit startFruit = _grid[startPosition].GetFruit();
-        BaseFruit targetFruit = _grid[targetPosition].GetFruit();
+        if (_grid[startPosition].Fruit != null && _grid[targetPosition].Fruit != null)
+        {
+            BaseFruit startFruit = _grid[startPosition].GetFruit();
+            BaseFruit targetFruit = _grid[targetPosition].GetFruit();
 
-        _grid[startPosition].SetNewFruit(targetFruit);
-        _grid[targetPosition].SetNewFruit(startFruit);
+            _grid[startPosition].SetNewFruit(targetFruit);
+            _grid[targetPosition].SetNewFruit(startFruit);
+        }
     }
 
-    private void OnMatch(List<Vector2> match)
+    private void OnHasMatch(List<List<Vector2>> matchList)
     {
-        foreach (var position in match)
+        foreach (var match in matchList)
         {
-            _grid[position].Destroy();
+            foreach (var position in match)
+            {
+                _grid[position].Destroy();
+            }
         }
+
+        StartCoroutine(Collapse());
+        matchList.Clear();
+    }
+
+    private IEnumerator Collapse()
+    {
+        yield return null;
+
+        foreach (var item in _grid)
+        {
+            Vector2 targetPosition = item.Key + Vector2.down;
+
+            if(CanCollapse(item.Key, targetPosition))
+            {
+                BaseFruit tempFruit = _grid[item.Key].GetFruit();
+                _grid[targetPosition].SetNewFruit(tempFruit);
+            }
+        }
+    }
+
+    private bool CanCollapse(Vector2 position, Vector2 targetPosition)
+    {
+        return _grid.ContainsKey(targetPosition) && _grid[targetPosition].Fruit == null && _grid[position].Fruit != null;
     }
 }
