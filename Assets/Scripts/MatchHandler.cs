@@ -59,6 +59,8 @@ public sealed class MatchHandler : MonoBehaviour
 
     private void FindAll()
     {
+        _matchList.Clear();
+
         foreach (var item in _grid)
         {
             Horizontal(item.Key);
@@ -152,5 +154,12 @@ public sealed class MatchHandler : MonoBehaviour
         }
 
         return result;
+    }
+
+    private IEnumerator ClearMatchList()
+    {
+        yield return null;
+
+        _matchList.Clear();
     }
 }

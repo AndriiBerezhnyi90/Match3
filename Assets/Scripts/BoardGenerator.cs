@@ -8,10 +8,14 @@ public sealed class BoardGenerator : MonoBehaviour
     [SerializeField] private List<BaseFruit> _fruitTemplates;
     [SerializeField] private Cell _cellTemplate;
     [SerializeField] private float _moveSpeed;
+    [SerializeField] private float _fallHeight;
+
+    private List<Queue<BaseFruit>> _newFruits;
 
     public void Create(out Dictionary<Vector2, Cell> grid, out int width, out int height)
     {
         grid = new Dictionary<Vector2, Cell>();
+        InitalizeNewFruits();
         width = _width;
         height = _height;
 
@@ -36,5 +40,31 @@ public sealed class BoardGenerator : MonoBehaviour
         var tempFruit = Instantiate(_fruitTemplates[templateIndex], position, Quaternion.identity);
 
         return tempFruit;
+    }
+
+    public void CreateNewFruit(Vector2 position)
+    {
+        Queue<BaseFruit> tempQueue = _newFruits[(int)position.x];
+        Vector2 tempPosition = new Vector2(position.x, _height + _fallHeight + tempQueue.Count);
+
+        tempQueue.Enqueue(NewFruit(tempPosition));
+    }
+
+    public BaseFruit SpawnFruit(Vector2 position)
+    {
+        var currentQueue = _newFruits[(int)position.x];
+
+        return currentQueue.Dequeue();
+    }
+
+    private void InitalizeNewFruits()
+    {
+        _newFruits = new List<Queue<BaseFruit>>(_width);
+
+        for (int i = 0; i < _width; i++)
+        {
+            Queue<BaseFruit> tempQueue = new Queue<BaseFruit>();
+            _newFruits.Add(tempQueue);
+        }
     }
 }
