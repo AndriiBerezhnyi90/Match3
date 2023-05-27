@@ -93,7 +93,7 @@ public sealed class Cell : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
     }
 
-    public BaseFruit GetFruit()
+    public BaseFruit RemoveFruit()
     {
         if (_fruit)
         {

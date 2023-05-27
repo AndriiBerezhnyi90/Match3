@@ -51,8 +51,8 @@ public sealed class Board : MonoBehaviour
 
     private void SwitchFruits(Vector2 startPosition, Vector2 targetPosition)
     {
-        BaseFruit startFruit = _grid[startPosition].GetFruit();
-        BaseFruit targetFruit = _grid[targetPosition].GetFruit();
+        BaseFruit startFruit = _grid[startPosition].RemoveFruit();
+        BaseFruit targetFruit = _grid[targetPosition].RemoveFruit();
 
         _grid[startPosition].SetNewFruit(targetFruit);
         _grid[targetPosition].SetNewFruit(startFruit);
@@ -65,11 +65,11 @@ public sealed class Board : MonoBehaviour
             foreach (var position in match)
             {
                 _grid[position].Destroy();
+                _boardGenerator.CreateNewFruit(position);
             }
         }
 
         StartCoroutine(Collapse());
-        matchList.Clear();
     }
 
     private IEnumerator Collapse()
@@ -78,18 +78,32 @@ public sealed class Board : MonoBehaviour
 
         foreach (var item in _grid)
         {
-            Vector2 targetPosition = item.Key + Vector2.down;
-
-            if(CanCollapse(item.Key, targetPosition))
+            if(item.Value.Fruit == null)
             {
-                BaseFruit tempFruit = _grid[item.Key].GetFruit();
-                _grid[targetPosition].SetNewFruit(tempFruit);
+                var upFruit = UpFruit(item.Key);
+                item.Value.SetNewFruit(upFruit);
             }
         }
     }
 
-    private bool CanCollapse(Vector2 position, Vector2 targetPosition)
+    private BaseFruit UpFruit(Vector2 position)
     {
-        return _grid.ContainsKey(targetPosition) && _grid[targetPosition].Fruit == null && _grid[position].Fruit != null;
+        Vector2 upPosition = position + Vector2.up;
+
+        if (_grid.ContainsKey(upPosition))
+        {
+            if(_grid[upPosition].Fruit == null)
+            {
+                return UpFruit(upPosition);
+            }
+            else
+            {
+                return _grid[upPosition].RemoveFruit();
+            }
+        }
+        else
+        {
+            return _boardGenerator.SpawnFruit(position);
+        }
     }
 }
