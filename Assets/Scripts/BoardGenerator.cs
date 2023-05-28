@@ -9,15 +9,15 @@ public sealed class BoardGenerator : MonoBehaviour
     [SerializeField] private Cell _cellTemplate;
     [SerializeField] private float _moveSpeed;
     [SerializeField] private float _fallHeight;
+    [SerializeField] private float _swipeBackDelay;
 
     private List<Queue<BaseFruit>> _newFruits;
 
-    public void Create(out Dictionary<Vector2, Cell> grid, out int width, out int height)
+    public void CreateNew(out Dictionary<Vector2, Cell> grid,  out WaitForSeconds swipeBackDelay)
     {
         grid = new Dictionary<Vector2, Cell>();
         InitalizeNewFruits();
-        width = _width;
-        height = _height;
+        swipeBackDelay = new WaitForSeconds(_swipeBackDelay);
 
         for (int x = 0; x < _width; x++)
         {
