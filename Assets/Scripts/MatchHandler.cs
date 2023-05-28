@@ -7,15 +7,15 @@ public sealed class MatchHandler : MonoBehaviour
 {
     private Dictionary<Vector2, Cell> _grid;
     private List<Vector2> _match;
-    private List<List<Vector2>> _matchList;
+    private List<Vector2> _matches;
 
-    public UnityAction<List<List<Vector2>>> HasMatch;
+    public UnityAction<List<Vector2>> HasMatch;
 
     public void Initialize( Dictionary<Vector2, Cell> grid)
     {
         _grid = grid;
         _match = new List<Vector2>();
-        _matchList = new List<List<Vector2>>();
+        _matches = new List<Vector2>();
     }
 
     private void Start()
@@ -36,7 +36,7 @@ public sealed class MatchHandler : MonoBehaviour
 
     public bool IsAvailable(Vector2 position)
     {
-        return _grid.ContainsKey(position) && _grid[position].Fruit != null && IsInMatch(position) == false;
+        return _grid.ContainsKey(position) && _grid[position].Fruit != null;
     }
 
     private void OnFruitHome()
@@ -59,7 +59,7 @@ public sealed class MatchHandler : MonoBehaviour
 
     private void FindAll()
     {
-        _matchList.Clear();
+        _matches.Clear();
 
         foreach (var item in _grid)
         {
@@ -67,7 +67,10 @@ public sealed class MatchHandler : MonoBehaviour
             Vertical(item.Key);
         }
 
-        HasMatch?.Invoke(_matchList);
+        if(_matches.Count > 0)
+        {
+            HasMatch?.Invoke(_matches);
+        }
     }
 
     private void Horizontal(Vector2 position)
@@ -120,14 +123,13 @@ public sealed class MatchHandler : MonoBehaviour
     {
         if (_match.Count >= 3)
         {
-            var tempList = new List<Vector2>(match.Count);
-
             foreach (var position in match)
             {
-                tempList.Add(position);
+                if (_matches.Contains(position) == false)
+                {
+                    _matches.Add(position);
+                }
             }
-
-            _matchList.Add(tempList);
         }
 
         _match.Clear();
@@ -139,27 +141,5 @@ public sealed class MatchHandler : MonoBehaviour
         Down,
         Left,
         Right
-    }
-
-    private bool IsInMatch(Vector2 position)
-    {
-        bool result = false;
-
-        foreach (var list in _matchList)
-        {
-            if (list.Contains(position))
-            {
-                result = true;
-            }
-        }
-
-        return result;
-    }
-
-    private IEnumerator ClearMatchList()
-    {
-        yield return null;
-
-        _matchList.Clear();
     }
 }

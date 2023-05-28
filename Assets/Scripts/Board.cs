@@ -7,17 +7,14 @@ public sealed class Board : MonoBehaviour
     [SerializeField] private BoardGenerator _boardGenerator;
     [SerializeField] private MatchHandler _matchHandler;
 
-    private int _width;
-    private int _height;
-
+    private bool _hasMatch;
     private Dictionary<Vector2, Cell> _grid;
+    private WaitForSeconds _swipeBackDelay;
 
-    public int Width => _width;
-    public int Height => _height;
 
     private void Awake()
     {
-        _boardGenerator.Create(out _grid, out _width, out _height);
+        _boardGenerator.CreateNew(out _grid, out _swipeBackDelay);
         _matchHandler.Initialize(_grid);
     }
 
@@ -45,7 +42,10 @@ public sealed class Board : MonoBehaviour
     {
         if (_grid.ContainsKey(targetPosition))
         {
+            _hasMatch = false;
             SwitchFruits(startPosition, targetPosition);
+
+            StartCoroutine(SwipeBack(startPosition, targetPosition));
         }
     }
 
@@ -58,15 +58,14 @@ public sealed class Board : MonoBehaviour
         _grid[targetPosition].SetNewFruit(startFruit);
     }
 
-    private void OnHasMatch(List<List<Vector2>> matchList)
+    private void OnHasMatch(List<Vector2> _matches)
     {
-        foreach (var match in matchList)
+        _hasMatch = true;
+
+        foreach (var position in _matches)
         {
-            foreach (var position in match)
-            {
-                _grid[position].Destroy();
-                _boardGenerator.CreateNewFruit(position);
-            }
+            _grid[position].Destroy();
+            _boardGenerator.CreateNewFruit(position);
         }
 
         StartCoroutine(Collapse());
@@ -104,6 +103,16 @@ public sealed class Board : MonoBehaviour
         else
         {
             return _boardGenerator.SpawnFruit(position);
+        }
+    }
+
+    private IEnumerator SwipeBack(Vector2 startPosition, Vector2 targetPosition)
+    {
+        yield return _swipeBackDelay;
+
+        if(_hasMatch == false)
+        {
+            SwitchFruits(startPosition, targetPosition);
         }
     }
 }
