@@ -72,9 +72,16 @@ public sealed class Cell : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         IsFruitHome = true;
     }
 
-    public void Destroy()
+    public void DestroyFruit()
     {
         Destroy(_fruit.gameObject);
+    }
+
+    public void Replace(BaseFruit newFruit)
+    {
+        DestroyFruit();
+        _fruit = newFruit;
+        _fruit.transform.SetParent(transform);
     }
 
     public void OnPointerDown(PointerEventData eventData)

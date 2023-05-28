@@ -9,9 +9,9 @@ public sealed class MatchHandler : MonoBehaviour
     private List<Vector2> _match;
     private List<Vector2> _matches;
 
-    public UnityAction<List<Vector2>> HasMatch;
+    public UnityAction<List<Vector2>,bool> HasMatch;
 
-    public void Initialize( Dictionary<Vector2, Cell> grid)
+    public void Initialize(Dictionary<Vector2, Cell> grid)
     {
         _grid = grid;
         _match = new List<Vector2>();
@@ -24,6 +24,8 @@ public sealed class MatchHandler : MonoBehaviour
         {
             item.Value.FruitHome += OnFruitHome;
         }
+
+        FindAll(true);
     }
 
     private void OnDisable()
@@ -57,7 +59,7 @@ public sealed class MatchHandler : MonoBehaviour
         }
     }
 
-    private void FindAll()
+    private void FindAll(bool isStartFind = false)
     {
         _matches.Clear();
 
@@ -67,9 +69,17 @@ public sealed class MatchHandler : MonoBehaviour
             Vertical(item.Key);
         }
 
-        if(_matches.Count > 0)
+        if (_matches.Count > 0)
         {
-            HasMatch?.Invoke(_matches);
+            if (isStartFind)
+            {
+                HasMatch?.Invoke(_matches,isStartFind);
+                FindAll(true);
+            }
+            else
+            {
+                HasMatch?.Invoke(_matches, isStartFind);
+            }
         }
     }
 

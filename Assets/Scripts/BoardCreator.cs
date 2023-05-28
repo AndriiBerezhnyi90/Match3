@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public sealed class BoardGenerator : MonoBehaviour
+public sealed class BoardCreator : MonoBehaviour
 {
     [SerializeField] private int _width;
     [SerializeField] private int _height;
@@ -13,7 +13,7 @@ public sealed class BoardGenerator : MonoBehaviour
 
     private List<Queue<BaseFruit>> _newFruits;
 
-    public void CreateNew(out Dictionary<Vector2, Cell> grid,  out WaitForSeconds swipeBackDelay)
+    public void New(out Dictionary<Vector2, Cell> grid,  out WaitForSeconds swipeBackDelay)
     {
         grid = new Dictionary<Vector2, Cell>();
         InitalizeNewFruits();
@@ -42,7 +42,7 @@ public sealed class BoardGenerator : MonoBehaviour
         return tempFruit;
     }
 
-    public void CreateNewFruit(Vector2 position)
+    public void PutFruitToSpawn(Vector2 position)
     {
         Queue<BaseFruit> tempQueue = _newFruits[(int)position.x];
         Vector2 tempPosition = new Vector2(position.x, _height + _fallHeight + tempQueue.Count);
@@ -55,6 +55,12 @@ public sealed class BoardGenerator : MonoBehaviour
         var currentQueue = _newFruits[(int)position.x];
 
         return currentQueue.Dequeue();
+    }
+
+    public void ReplaceFruit(Cell cell)
+    {
+        Vector2 cellPosition = cell.transform.position;
+        cell.Replace(NewFruit(cellPosition));
     }
 
     private void InitalizeNewFruits()
