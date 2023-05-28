@@ -4,7 +4,7 @@ using System.Collections;
 
 public sealed class Board : MonoBehaviour
 {
-    [SerializeField] private BoardGenerator _boardGenerator;
+    [SerializeField] private BoardCreator _boardCreator;
     [SerializeField] private MatchHandler _matchHandler;
 
     private bool _hasMatch;
@@ -14,7 +14,7 @@ public sealed class Board : MonoBehaviour
 
     private void Awake()
     {
-        _boardGenerator.CreateNew(out _grid, out _swipeBackDelay);
+        _boardCreator.New(out _grid, out _swipeBackDelay);
         _matchHandler.Initialize(_grid);
     }
 
@@ -58,17 +58,28 @@ public sealed class Board : MonoBehaviour
         _grid[targetPosition].SetNewFruit(startFruit);
     }
 
-    private void OnHasMatch(List<Vector2> _matches)
+    private void OnHasMatch(List<Vector2> _matches, bool isStartFind)
     {
-        _hasMatch = true;
-
-        foreach (var position in _matches)
+        if (isStartFind)
         {
-            _grid[position].Destroy();
-            _boardGenerator.CreateNewFruit(position);
+            foreach (var position in _matches)
+            {
+                var currentCell = _grid[position];
+                _boardCreator.ReplaceFruit(currentCell);
+            }
         }
+        else
+        {
+            _hasMatch = true;
 
-        StartCoroutine(Collapse());
+            foreach (var position in _matches)
+            {
+                _grid[position].DestroyFruit();
+                _boardCreator.PutFruitToSpawn(position);
+            }
+
+            StartCoroutine(Collapse());
+        }
     }
 
     private IEnumerator Collapse()
@@ -102,7 +113,7 @@ public sealed class Board : MonoBehaviour
         }
         else
         {
-            return _boardGenerator.SpawnFruit(position);
+            return _boardCreator.SpawnFruit(position);
         }
     }
 

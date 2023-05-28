@@ -377,7 +377,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e086705206528bc43b634254c4453c99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _boardGenerator: {fileID: 1151707483}
+  _boardCreator: {fileID: 1151707483}
   _matchHandler: {fileID: 186839036}
 --- !u!1 &1151707481
 GameObject:
@@ -390,7 +390,7 @@ GameObject:
   - component: {fileID: 1151707482}
   - component: {fileID: 1151707483}
   m_Layer: 0
-  m_Name: BoardGenerator
+  m_Name: BoardCreator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -428,6 +428,10 @@ MonoBehaviour:
   - {fileID: 9064943648857092485, guid: d480be83c0b75ed45a5113541b6a1a61, type: 3}
   - {fileID: -8663424365060048523, guid: 8d770e5044f97f14f986d3e0de76ea1d, type: 3}
   - {fileID: 6469290224843018179, guid: 850f0bdcc915a1643bcf70483582d8b8, type: 3}
+  - {fileID: 5498415775618928639, guid: 2549864239f2a89488c1d59d1e2cadf1, type: 3}
+  - {fileID: -802515525780716668, guid: fdf8d69005c42bc49bc4a2d89b90fadd, type: 3}
+  - {fileID: -9097421597781052938, guid: 557c827e4ff97a34ba6b5b6acd7972b2, type: 3}
+  - {fileID: 3518467683989017020, guid: fa612261d8e31c94ebb17a9184f84892, type: 3}
   _cellTemplate: {fileID: -7350453643967372798, guid: fd4c46c222a23d0479343de16dffd8c3, type: 3}
   _moveSpeed: 5
   _fallHeight: 3
