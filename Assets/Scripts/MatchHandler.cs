@@ -10,6 +10,22 @@ public sealed class MatchHandler : MonoBehaviour
     private List<Vector2> _matches;
 
     public UnityAction<List<Vector2>,bool> HasMatch;
+    public bool AreFruitsHome
+    {
+        get
+        {
+            bool areFruitsHome = true;
+
+            foreach (var item in _grid)
+            {
+                if (item.Value.IsFruitHome == false)
+                {
+                    areFruitsHome = false;
+                }
+            }
+            return areFruitsHome;
+        }
+    }
 
     public void Initialize(Dictionary<Vector2, Cell> grid)
     {
@@ -43,17 +59,7 @@ public sealed class MatchHandler : MonoBehaviour
 
     private void OnFruitHome()
     {
-        bool allFruitsHome = true;
-
-        foreach (var item in _grid)
-        {
-            if(item.Value.IsFruitHome == false)
-            {
-                allFruitsHome = false;
-            }
-        }
-
-        if (allFruitsHome)
+        if (AreFruitsHome)
         {
             FindAll();
         }
