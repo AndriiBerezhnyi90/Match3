@@ -97,6 +97,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _swipeDeathZone: 0.2
+  _destroyEffect: {fileID: 3606180882346743455, guid: 29f5426d94e3a614398dd1db9ca96d9e, type: 3}
+  IsFruitHome: 0
 --- !u!61 &2735314322845168657
 BoxCollider2D:
   m_ObjectHideFlags: 0

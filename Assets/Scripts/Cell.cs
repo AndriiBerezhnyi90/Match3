@@ -8,15 +8,19 @@ using System;
 public sealed class Cell : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField] private float _swipeDeathZone;
+    [SerializeField] private DestroyEffect _destroyEffect;
 
     private BaseFruit _fruit;
     private Vector2 _startSwipePosition;
     private Vector2 _endSwipePosition;
     private float _moveSpeed;
+    private bool _isFruitHome;
 
     public UnityAction<Vector2, Vector2> Swipe;
     public UnityAction FruitHome;
-    public bool IsFruitHome;
+
+    public bool IsFruitHome => _isFruitHome;
+
     public Type Fruit
     {
         get
@@ -69,17 +73,19 @@ public sealed class Cell : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         _fruit = fruit;
         _fruit.transform.SetParent(this.transform);
         _moveSpeed = moveSpeed;
-        IsFruitHome = true;
+        _isFruitHome = true;
     }
 
     public void DestroyFruit()
     {
+        var effect = Instantiate(_destroyEffect, transform.position, Quaternion.identity, transform);
+        effect.SetMaterial(_fruit.Material);
         Destroy(_fruit.gameObject);
     }
 
     public void Replace(BaseFruit newFruit)
     {
-        DestroyFruit();
+        Destroy(_fruit.gameObject);
         _fruit = newFruit;
         _fruit.transform.SetParent(transform);
     }
@@ -121,7 +127,7 @@ public sealed class Cell : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if (fruit == true)
         {
             _fruit = fruit;
-            IsFruitHome = false;
+            _isFruitHome = false;
             StartCoroutine(Moving());
         }
     }
@@ -136,7 +142,7 @@ public sealed class Cell : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
 
         _fruit.transform.SetParent(transform);
-        IsFruitHome = true;
+        _isFruitHome = true;
         FruitHome?.Invoke();
     }
 }
