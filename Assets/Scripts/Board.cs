@@ -8,6 +8,7 @@ public sealed class Board : MonoBehaviour
     [SerializeField] private MatchHandler _matchHandler;
 
     private bool _hasMatch;
+    private bool _canSwipe;
     private Dictionary<Vector2, Cell> _grid;
     private WaitForSeconds _swipeBackDelay;
 
@@ -16,6 +17,7 @@ public sealed class Board : MonoBehaviour
     {
         _boardCreator.New(out _grid, out _swipeBackDelay);
         _matchHandler.Initialize(_grid);
+        _canSwipe = true;
     }
 
     private void OnEnable()
@@ -40,9 +42,10 @@ public sealed class Board : MonoBehaviour
 
     private void OnSwipe(Vector2 startPosition, Vector2 targetPosition)
     {
-        if (_grid.ContainsKey(targetPosition))
+        if (_grid.ContainsKey(targetPosition) && _canSwipe && _matchHandler.AreFruitsHome)
         {
             _hasMatch = false;
+            _canSwipe = false;
             SwitchFruits(startPosition, targetPosition);
 
             StartCoroutine(SwipeBack(startPosition, targetPosition));
@@ -125,5 +128,7 @@ public sealed class Board : MonoBehaviour
         {
             SwitchFruits(startPosition, targetPosition);
         }
+
+        _canSwipe = true;
     }
 }
