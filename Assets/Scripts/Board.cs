@@ -12,7 +12,6 @@ public sealed class Board : MonoBehaviour
     private Dictionary<Vector2, Cell> _grid;
     private WaitForSeconds _swipeBackDelay;
 
-
     private void Awake()
     {
         _boardCreator.New(out _grid, out _swipeBackDelay);

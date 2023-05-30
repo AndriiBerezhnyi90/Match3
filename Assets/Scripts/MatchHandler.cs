@@ -10,6 +10,7 @@ public sealed class MatchHandler : MonoBehaviour
     private List<Vector2> _matches;
 
     public UnityAction<List<Vector2>,bool> HasMatch;
+
     public bool AreFruitsHome
     {
         get
